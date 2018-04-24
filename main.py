@@ -1,16 +1,21 @@
 from elasticsearch import Elasticsearch
+#import datetime
+from datetime import datetime
+
 es = Elasticsearch([{'host': '192.168.7.5', 'port': 9200}])
 
+#def es_query:
 #print(es.info())
+#print(datetime.datetime.now())
 
-#print(es.get(index="filebeat-2018.04.23", doc_type="doc", id='uC-y8mIBAt7Av6H3m_mc'))
-a = es.search(index='filebeat-2018.04.23', body={"query": {"prefix" : { "message" : "pass" }}})
+today = datetime.strftime(datetime.now(), 'filebeat-%Y.%m.%d')
+#print(today)
 
+res = es.search(index=today, body={"query": {"prefix": {"message": "sshd"}}})
 
-# for k, v in a:
-#     if k == 'system message':
-#         print(v)
+print("{} documents found".format(res['hits']['total']))
 
-#import requests
-#res = requests.get('http://192.168.7.5:9200')
-#print(res.content)
+for doc in res['hits']['hits']:
+    if 'Failed' in doc['_source']['message']:
+        print("{} --- {}".format(doc['_id'], doc['_source']['message']))
+
