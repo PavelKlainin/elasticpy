@@ -17,15 +17,16 @@ def es_search():
     ip_who_attack = {}  # dict for founded ip addresses
     if res['hits']['total'] > 0:
         for doc in res['hits']['hits']:
-            if 'sshd' in doc['_source']['message']:
+            #print(doc['_source']['message'])
+            if 'ssh2' in doc['_source']['message']:
                 ip = regex_ip.search(doc['_source']['message']).group()
                 if ip in ip_who_attack:
                     ip_who_attack.update({ip: ip_who_attack[ip] + 1})
                 else:
                     ip_who_attack.update({ip: 1})
-            else:
-                #print('Today there was no attack on ssh.')
-                return False    # there are no 'sshd' in log
+            #else:
+                #print('there are no ssh in log')
+                #return False    # there are no 'sshd' in log
     else:
         print('Today there was no attack on ssh.')
         return False    # no search result
