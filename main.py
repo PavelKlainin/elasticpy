@@ -10,6 +10,6 @@ if es_search():
             cmd = 'iptables -A INPUT -s {} -p tcp --dport 22 -j DROP'.format(ip)
             telegram(message)
             print(message + '\n' + cmd)
-            subprocess.call(cmd)
+            subprocess.call(cmd, shell=True)
 
 
